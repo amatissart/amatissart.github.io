@@ -9,7 +9,7 @@ layout: default
   <h4 class="index">{{post.tagline}}</h4>
   <p class="author">
     <span class="date">{{ post.date | date: "%-d %B %Y" }}</span>
-     - <a href="http://localhost:4000{{ post.url }}/#disqus_thread"></a>
+     - <a href="{{ post.url }}/#disqus_thread" data-disqus-identifier="{{post.identifier}}"></a>
   </p>
   <div class="content">
     {{ post.content }}
