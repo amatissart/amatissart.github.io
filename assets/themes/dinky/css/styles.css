@@ -125,8 +125,12 @@ h4.index {
 }
 
 h4.tagline {
-    margin: 0px 0px 20px 0px; font-size: 16px; 
-    color: #741734; font-style: italic;
+    margin: 0px 0px 20px 0px; 
+    font-size: 16px; 
+    color: #354659;
+    /*color: #741734; */
+    font-style: italic;
+    float: left;
 }
 
 a {
