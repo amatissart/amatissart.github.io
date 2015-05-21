@@ -60,12 +60,17 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #D20249;
+  /* color: #D20249; */
+  color: #F0740C;
   margin:36px 0 10px;
 }
 
 p, ul, ol, table, dl {
-  margin:0 0 22px;
+  margin: 0 0 22px;
+}
+
+.misc p.header {
+    margin: 0px;
 }
 
 p.author {
@@ -130,8 +135,19 @@ a {
   text-decoration:none;
 }
 
+header li a {
+    display: inline-block; */ /* height: 15px; */ margin-bottom: 12px;  ;
+    width: 130px; height: 15px;  line-height: 1em; 
+    padding: 6px 6px 5px 8px;
+}
+
 a:hover {
 	text-decoration: underline;
+}
+
+
+header li a:hover {
+    text-decoration: initial;
 }
 
 a small {
@@ -198,6 +214,12 @@ img {
   border: 1px solid #ccc;
 }
 
+.vcard img{
+  border: none;
+  margin: 0 auto;
+  padding: 5px 0px;
+}
+
 
 /* Code blocks */
 
@@ -255,41 +277,44 @@ td {
 /* Header */
 
 header {
-	background-color: #171717;
+	background-color: #28333D;
 	color: #FDFDFB;
   width:170px;
   float:left;
   position:fixed;
-	border: 1px solid #000;
 	-webkit-border-top-right-radius: 4px;
 	-webkit-border-bottom-right-radius: 4px;
 	-moz-border-radius-topright: 4px;
 	-moz-border-radius-bottomright: 4px;
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;
-	padding: 34px 25px 22px 50px;
+	padding: 34px 25px 30px 50px;
 	margin: 30px 25px 0 0;
 	-webkit-font-smoothing: antialiased;
 }
 
 p.header {
 	font-size: 16px;
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
+
+header p.header {}
 
 h1.header {
 	font-family: 'Arvo', sans-serif;
-	font-size: 30px;
+	font-size: 25px;
 	font-weight: 300;
 	line-height: 1.3em;
 	border-bottom: none;
 	margin-top: 0;
+	margin-bottom: 0;
 }
 
 
 h1.header, a.header, a.name, header a{
 	color: #fff;
 }
+
 
 a.header {
 	text-decoration: underline;
@@ -306,12 +331,14 @@ header ul {
 
 header li {
 	list-style-type: none;
-width: 132px;
-height: 15px;
-margin-bottom: 12px;
-line-height: 1em;
 
-	padding: 6px 6px 5px 8px;
+
+
+	margin-bottom: 12px;
+
+
+	display: inline-block;
+	padding: 0px;
 background: #217FE3;
 background: -moz-linear-gradient(top, #217FE3 0%,#095596 100%);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#dddddd));
@@ -321,7 +348,6 @@ background: -ms-linear-gradient(top, #217FE3 0%,#095596 100%);
 background: linear-gradient(top, #217FE3 0%,#095596 100%);
 border-radius: 4px;
 
-	border: 1px solid #0D0D0D;
 -webkit-box-shadow: inset 0px 1px 1px 0 rgba(0, 21, 86, 1);
 box-shadow: inset 0px 1px 1px 0 rgba(0, 21, 86, 1);
 }

@@ -44,18 +44,9 @@
         {% if site.author %}
         <div class="misc vcard">
           <p class="header">about me</p>
-          <ul>
-          	{% if site.author.homepage %}
-            <li class="homepage"><a href="{{ site.author.homepage }}" rel="me">Website</a></li>
-            {% endif %}
-            {% if site.author.email %}
-            <li class="contact"><address><a href="mailto:{{ site.author.email }}">Contact</a></address></li>
-            {% endif %}
+          <!-- <ul>
             {% if site.author.github %}
             <li class="github"><a href="http://github.com/{{ site.author.github }}/" rel="me">Github</a></li>
-            {% endif %}
-            {% if site.author.twitter %}
-            <li class="twitter"><a href="http://twitter.com/{{ site.author.twitter }}/" rel="me">Twitter</a></li>
             {% endif %}
             {% if site.author.facebook %}
             <li class="facebook"><a href="http://facebook.com/{{ site.author.facebook }}/" rel="me">facebook.com/{{ site.author.facebook }}</a></li>
@@ -69,7 +60,27 @@
             {% if site.author.pinterest %}
             <li class="pinterest"><a href="http://pinterest.com/{{ site.author.pinterest }}" rel="me">pinterest.com/{{ site.author.pinterest }}</a></li>
             {% endif %}
-          </ul>
+          </ul> -->
+
+          {% if site.author.homepage %}
+            <a href="{{ site.author.homepage }}" title="Homepage"><img src="/assets/images/home2.png" width="30" height="30" /></a>
+          {% endif %}
+
+          {% if site.author.email %}
+            <!-- <li class="contact"><address><a href="mailto:{{ site.author.email }}">Contact</a></address></li> -->
+            <a href="mailto:{{ site.author.email }}" title="Contact"><img src="/assets/images/email.png" width="30" height="30" /></a>
+          {% endif %}
+
+          {% if site.author.twitter %}
+            <!-- <li class="twitter"><a href="http://twitter.com/{{ site.author.twitter }}/" rel="me">Twitter</a></li> -->
+            <a href="http://twitter.com/{{ site.author.twitter }}" title="Twitter" ><img src="http://matissart.net/img/twitter.png" width="30" height="30" /></a>
+          {% endif %}
+
+          {% if site.author.linkedin %}
+            <!-- <li class="twitter"><a href="http://twitter.com/{{ site.author.twitter }}/" rel="me">Twitter</a></li> -->
+            <a href="http://linkedin.com/in/{{ site.author.linkedin }}" title="Linkedin" ><img src="http://matissart.net/img/linkedin.png" width="30" height="30" /></a>
+          {% endif %}
+          
         </div><!-- misc -->
         {% endif %}
       </header>
