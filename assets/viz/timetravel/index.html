@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title>Time Travel in Movies</title>
+<style>
+
+body{
+  /*background-color: #eee;*/
+  /*margin: 20px;*/
+}
+
+#chart {
+  margin-left: 0px;
+  height: 656px;
+  position: relative;
+}
+
+.dot {
+  stroke: #000;
+  opacity: 0.85;
+}
+
+.dot.hovered{
+  fill: #f00;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.tick text{
+  font-size: 14px;
+  font-family: sans-serif;
+  fill: #444;
+}
+
+.label {
+  fill: #777;
+  font-family: sans-serif;
+  font-style: italic;
+  font-size: 14px;
+}
+
+
+div.ttip .year {
+  font-weight: bold;
+  text-align: center;
+  color: #0284B3;
+}
+
+div.ttip .movie-title{
+  text-align: center;
+  margin-top:  20px;
+  color: #484c58;
+  font-size: 16px;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+  cursor: ew-resize;
+}
+
+div.ttip{
+  background-color:  #fff;
+  border-radius: 5px;
+  border: 1px solid #dedfe2;
+  box-shadow: 2px 2px 1px 1px rgba(222, 223, 226, 0.6);
+  padding: 10px;
+  overflow: hidden;
+  font-family: "Helvetica";
+}
+
+div.ttip img{
+  max-height: 220px;
+}
+
+div.ttip div{
+  color: #777;
+}
+
+.poster{
+  float:left;
+  margin-right:10px;
+}
+
+h1{
+  font-family: "Ubuntu", Arial, sans-serif;
+  font-size: 18px;
+}
+
+</style>
+
+<h1>Time Travel in Movies</h1>
+
+<p id="chart"></p>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// Various accessors that specify the four dimensions of data to visualize.
+function x(d) { return d.year*1; }
+function y(d) { return d.rating*1;}
+function radius(d) { if(d.budget) return d.budget.slice(1).replace(/,/g,''); else return "0" }
+function color(d) { return d.genres.indexOf("Sci-Fi")>=0; }
+function key(d) { return d.idIMDB; }
+
+// Chart dimensions.
+var margin = {top: 19.5, right: 29.5, bottom: 29.5, left: 49.5},
+    width = 0.9*document.body.clientWidth - margin.right,
+    height = Math.min(0.7*width,700) - margin.top - margin.bottom;
+
+var wScale = Math.min(document.body.clientWidth/1300,1);
+
+// Various scales. These domains make assumptions of data, naturally.
+var xScale = d3.scale.linear().domain([1948, 2015]).range([0, width]),
+    yScale = d3.scale.linear().domain([3.6, 10]).range([height, 0]),
+    radiusScale = d3.scale.sqrt().domain(["0", "300000000"]).range([wScale*6, wScale*35]),
+    colorScale = d3.scale.category10();
+
+// The x & y axes.
+var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(12, d3.format(",d")),
+    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+// Create the SVG container and set the origin.
+var svg = d3.select("#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Add the x-axis.
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+// Add the y-axis.
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+// Add an x-axis label.
+svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height - 6)
+    .text("year of release");
+
+// Add a y-axis label.
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("IMDb users rating");
+
+
+// Load the data.
+d3.json("movies.json", function(data) {
+  var movies = data.movies;
+
+  // Add a dot per movie.
+  var dot = svg.append("g")
+      .attr("class", "dots")
+    .selectAll(".dot")
+      .data(movies)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("fill", function(d) { return colorScale(color(d)); })
+      .call(position)
+      .sort(order);
+
+  // Add a title.
+  dot.append("title")
+      .text(function(d) { 
+            if(d.originalTitle) return d.originalTitle; 
+            else return d.title; });
+
+  // Positions the dots based on data.
+  function position(dot) {
+    dot .attr("cx", function(d) { return xScale(x(d)); })
+        .attr("cy", function(d) { return yScale(y(d)); })
+        .attr("r", function(d) { return radiusScale(radius(d)); })
+        .on("mouseover", function(d){
+          d3.select(this).classed("hovered",true);
+          updateTooltip(d);
+        })
+        .on("mouseout",function(d){
+          d3.select(this).classed("hovered",false);
+          tooltip.style("visibility", "hidden");
+        });
+  }
+
+  // Defines a sort order so that the smallest dots are drawn on top.
+  function order(a, b) {
+    return radius(b) - radius(a);
+  }
+
+  var tooltip = d3.select("#chart")
+    .append("div")
+    .attr("class","ttip")
+    .style("position", "absolute")
+    .style("visibility", "hidden")
+    .style("width","330px")
+    .style("height","220px");
+  
+
+  function updateTooltip(d) {
+    var X = xScale(x(d));
+    if(X+410>document.body.clientWidth){
+      X = X-325;
+    }
+    else{
+      X += 75;
+    }
+    tooltip.html("");
+    tooltip.style("top",(yScale(y(d))-100)+"px")
+    tooltip.style("left",(X)+"px")
+    tooltip.append("img")
+          .attr("class","poster")
+          .attr("src","https://i.embed.ly/1/display?key=f6520fa423e74031a1b5c5404e1cb0cb&url="+
+            encodeURIComponent(d.urlPoster))
+          .attr("width","150px")
+          .attr("height","auto");
+    tooltip.append("div")
+          .attr("class","movie-title")
+          .html(d.title+(d.originalTitle ? " - <i>"+d.originalTitle+"</i>" : ""));
+    tooltip.append("div")
+          .attr("class","year")
+          .html(d.year);
+    tooltip.append("div")
+          .html("<br>"+d.budget);
+    tooltip.append("div")
+          .html("Rating: <b>"+d.rating+"</b>");
+    tooltip.append("div")
+          .html("<br>Votes: "+d.votes);
+    tooltip.append("div")
+          .html(d.metascore ? "Metascore: <b>"+d.metascore+"</b>":"");
+    tooltip.style("visibility", "visible");
+  }
+
+  var legend = svg.selectAll(".legend")
+      .data(colorScale.domain().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  // draw legend colored rectangles
+  legend.append("rect")
+      .attr("x", margin.left-34)
+      .attr("y",height-50)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", colorScale);
+
+  // draw legend text
+  legend.append("text")
+      .attr("x", margin.left -10)
+      .attr("y", height-41)
+      .attr("dy", ".35em")
+      .text(function(d) { return d?"Sci-Fi":"Other";})
+
+});
+</script>

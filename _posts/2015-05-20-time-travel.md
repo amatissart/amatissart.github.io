@@ -22,5 +22,5 @@ Voici donc un aperçu de l'ensemble des films dont le scénario fait appel à un
 
 ## Visualisation
 
-<iframe src="//matissart.net/timetravel" width="100%" height="600px" scrolling="no">
+<iframe src="{{ ASSET_PATH }}/viz/timetravel" width="100%" height="600px" scrolling="no">
 </iframe>
